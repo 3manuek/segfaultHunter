@@ -14,6 +14,7 @@ The clean up of the log isn't working and I didn't find a clean way to release t
 
 The idea will be to add a threshold on the file size, stop strace and re-run it.
 
+`curl` needs to be installed, as it uses it to post to Hipchat. If you don't want HC integration, comment the command.
 
 The segfault logs will be labeled as *SEGFAULT* in the file name. Here is an example of the 
 files created:
