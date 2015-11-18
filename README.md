@@ -8,6 +8,13 @@ Run with sudo:
 sudo ./segfaulthunter.sh
 ```
 
+IMPORTANT:
+
+The clean up of the log isn't working and I didn't find a clean way to release the lock imposed by strace to do so.
+
+The idea will be to add a threshold on the file size, stop strace and re-run it.
+
+
 The segfault logs will be labeled as *SEGFAULT* in the file name. Here is an example of the 
 files created:
 
