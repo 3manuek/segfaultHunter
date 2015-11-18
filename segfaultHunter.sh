@@ -20,7 +20,7 @@ trap "{ rm -f $lockFile ; rm -f $tempMessages ; exit 255; }" SIGINT SIGTERM
 source $tokenFile
 
 function HCNotif() {
-	curl -d '{"color":"red","message":"Segfault found at Rock You at '"$hostname - hash $1"'","notify":false,"message_format":"text"}' -H 'Content-Type: application/json' https://blackbirdit.hipchat.com/v2/room/2160170/notification?auth_token=$token
+	curl -d '{"color":"red","message":"Segfault found at <customer> at '"$hostname - hash $1"'","notify":false,"message_format":"text"}' -H 'Content-Type: application/json' https://blackbirdit.hipchat.com/v2/room/2160170/notification?auth_token=$token
 }
 
 function rotateLogOnTrigger() {
