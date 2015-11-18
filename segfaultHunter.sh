@@ -15,12 +15,12 @@ delayCheck=20
 tokenFile=."$(basename $0 | sed 's/.sh//g')".token
 
 
-trap "{ rm -f $lockFile ; rm -f $tempMessages ; exit 255; }" SIGINT SIGTERM
+trap "{ killStrace ; rm -f $lockFile ; rm -f $tempMessages ; exit 255; }" SIGINT SIGTERM
 
 source $tokenFile
 
 function HCNotif() {
-	curl -d '{"color":"red","message":"Segfault found at <customer> at '"$hostname - hash $1"'","notify":false,"message_format":"text"}' -H 'Content-Type: application/json' https://blackbirdit.hipchat.com/v2/room/2160170/notification?auth_token=$token
+	curl -d '{"color":"red","message":"Segfault found at Rock You at '"$hostname - hash $1"'","notify":false,"message_format":"text"}' -H 'Content-Type: application/json' https://blackbirdit.hipchat.com/v2/room/2160170/notification?auth_token=$token
 }
 
 function rotateLogOnTrigger() {
@@ -35,7 +35,7 @@ function killStrace() {
 touch $lockFile
 [[ -e $traceLog ]] && { mv $traceLog $traceLog$epoch ; gzip $traceLog$epoch ; echo "Rotated log to ${traceLog}${epoch}.gz" ; } 
 
-strace -e trace=all -e signal=all -C -i -v -p $pidofMysqld -f -t  -o $traceLog &
+strace -e trace=all -e signal=all -C -i -v -p $pidofMysqld -f -t  &> $traceLog &
 pidStrace=$!
 
 while(true) ; do
@@ -46,7 +46,7 @@ while(true) ; do
 	[[ ! -s $tempMessages ]] && { kill -STOP $pidStrace ; truncate -s '<200KB' $traceLog ; kill -CONT $pidStrace  ; continue ; } 
 	currentHash=$(md5sum $tempMessages | cut -f1 -d' ')
         lastHash=$(cat $hashStamp | cut -f1 -d' ')
-        [[ "$lastHash" == "$currentHash" ]] && { continue ; } 
+        [[ "$lastHash" == "$currentHash" ]] && { truncate -s '<200KB' $traceLog ; continue ; } 
 	md5sum $tempMessages  | cut -d' ' -f1 > $hashStamp
 	#Notify me on the Hipchat
 	HCNotif $currentHash
