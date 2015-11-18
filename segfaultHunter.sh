@@ -3,6 +3,10 @@
 # $1 file of the strace output
 # 
 
+# FIXME! 
+# fix strace issue (-C is no available in 4.5)
+# use parallel strace for rotating unnecesary output
+
 epoch=$(date +%s)
 pidofMysqld=$(pidof mysqld)
 coreDumpDir=/var/spool/abrt/
