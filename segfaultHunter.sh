@@ -15,6 +15,7 @@ tempMessages=.tempMessages
 hashStamp=."$(basename $0 | sed 's/.sh//g')".hash
 traceLog=$(basename $0 | sed 's/.sh/.log/g')
 lockFile=$(basename $0 | sed 's/.sh/.lock/g')
+backtrace=$(basename $0 | sed 's/.sh/-backtrace.log/g')
 delayCheck=20
 tokenFile=."$(basename $0 | sed 's/.sh//g')".token
 
@@ -39,6 +40,7 @@ function killStrace() {
 touch $lockFile
 [[ -e $traceLog ]] && { mv $traceLog $traceLog$epoch ; gzip $traceLog$epoch ; echo "Rotated log to ${traceLog}${epoch}.gz" ; } 
 
+# gdb -ex "set pagination 0" -ex "thread apply all bt" --batch -p $pidofMysqld &> $backtrace &
 strace -e trace=all -e signal=all -C -i -v -p $pidofMysqld -f -t  &> $traceLog &
 pidStrace=$!
 
