@@ -41,6 +41,7 @@ touch $lockFile
 [[ -e $traceLog ]] && { mv $traceLog $traceLog$epoch ; gzip $traceLog$epoch ; echo "Rotated log to ${traceLog}${epoch}.gz" ; } 
 
 # gdb -ex "set pagination 0" -ex "thread apply all bt" --batch -p $pidofMysqld &> $backtrace &
+# Example case: http://bugs.mysql.com/bug.php?id=79185
 strace -e trace=all -e signal=all -C -i -v -p $pidofMysqld -f -t  &> $traceLog &
 pidStrace=$!
 
